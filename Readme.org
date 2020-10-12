@@ -1,0 +1,64 @@
+#+TITLE: ob-reticulate
+
+[[https://orgmode.org/worg/org-contrib/babel/][org-babel]] support for the [[https://rstudio.github.io/reticulate/][reticulate]] interface between R and Python.
+
+* Installation
+
+First ensure you have the latest Org release (9.4). Add
+=ob-reticulate.el= to your =load-path= and require it:
+
+#+begin_src emacs-lisp
+  (require 'ob-reticulate)
+#+end_src
+
+* Usage
+
+Simply pass an interactive R buffer's name as the =:session= header
+argument to an =ob-python= block. The Python block will then be
+executed via =reticulate= in the R session.
+
+You'll need to first load reticulate in the R session by calling
+=library(reticulate)=.
+
+For example:
+
+#+begin_src org
+  ,#+begin_src R :session *R:ob-reticulate* :results output
+    library(reticulate)
+  ,#+end_src
+
+  ,#+RESULTS:
+
+  ,#+begin_src python :session *R:ob-reticulate* :colnames yes
+    import pandas as pd
+    df = pd.DataFrame({"X":[1,2,3], "Y":["a","b","c"]})
+    df
+  ,#+end_src
+
+  ,#+RESULTS:
+  | X | Y |
+  |---+---|
+  | 1 | a |
+  | 2 | b |
+  | 3 | c |
+
+  ,#+begin_src R :session *R:ob-reticulate* :results output
+    summary(py$df)
+  ,#+end_src
+
+  ,#+RESULTS:
+  :        X            Y            
+  :  Min.   :1.0   Length:3          
+  :  1st Qu.:1.5   Class :character  
+  :  Median :2.0   Mode  :character  
+  :  Mean   :2.0                     
+  :  3rd Qu.:2.5                     
+  :  Max.   :3.0
+#+end_src
+
+* Note on header arguments
+
+Reticulate blocks use header arguments for =ob-R= instead of
+=ob-python=. For example, the =:colnames= and =:rownames= headers,
+which are available in =ob-R= but not =ob-python=, can be used with
+blocks executed by =reticulate=.
