@@ -3,23 +3,10 @@
 ;; Copyright (C) 2020 Free Software Foundation, Inc.
 
 ;; Author: Jack Kamm
-;; Keywords: literate programming, reproducible research, R, statistics
-;; Homepage: https://orgmode.org
-
-;; This file is part of GNU Emacs.
-
-;; GNU Emacs is free software: you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or
-;; (at your option) any later version.
-
-;; GNU Emacs is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-
-;; You should have received a copy of the GNU General Public License
-;; along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.
+;; Keywords: literate programming, reproducible research, R, statistics, languages, outlines, processes
+;; Package-Requires: ((org "9.4") (emacs "24.4"))
+;; Homepage: https://github.com/jackkamm/ob-reticulate
+;; Version: 1.0.0
 
 ;;; Commentary:
 
@@ -30,12 +17,13 @@
 (require 'ob-R)
 (require 'ob-python)
 
-(defalias 'org-babel-edit-prep:reticulate 'org-babel-edit-prep:R)
+(declare-function org-babel-python-format-session-value "ext:ob-python"
+                  (src-file result-file result-params))
 
 (advice-add
- 'org-babel-execute:python :around 'org-babel-reticulate-advice)
+ #'org-babel-execute:python :around #'ob-reticulate-advice)
 
-(defun org-babel-reticulate-advice (orig-fun body params)
+(defun ob-reticulate-advice (orig-fun body params)
   (let* ((session (cdr (assq :session params)))
          (session-mode
           (and session
