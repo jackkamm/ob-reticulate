@@ -32,9 +32,6 @@
 (require 'ob-R)
 (require 'ob-python)
 
-(declare-function org-babel-python-format-session-value "ext:ob-python"
-                  (src-file result-file result-params))
-
 (advice-add
  #'org-babel-execute:python :around #'ob-reticulate-advice)
 
