@@ -32,9 +32,6 @@
 (require 'ob-R)
 (require 'ob-python)
 
-(advice-add
- #'org-babel-execute:python :around #'ob-reticulate-advice)
-
 (defun ob-reticulate-advice (orig-fun body params)
   (let* ((session (cdr (assq :session params)))
          (session-mode
@@ -60,6 +57,24 @@
 		 (when (equal result-type 'value) "
 reticulate::py$`__org_babel_python_final`"))
          params)))))
+
+;;;###autoload
+(define-minor-mode ob-reticulate-mode
+  "Toggle to enable ob-reticulate-mode.
+
+When enabled, the :session header argument of ob-python blocks
+may be an R session.  Note the R session should have the reticulate
+library loaded before executing ob-python blocks with it.
+
+Also, note that ob-reticulate blocks use header arguments for
+`ob-R' instead of `ob-python'.  For example, the :colnames and
+:rownames headers, which are available in ob-R but not ob-python,
+can be used with Python blocks executed by ob-reticulate."
+  :global t
+  (if ob-reticulate-mode
+      (advice-add
+       #'org-babel-execute:python :around #'ob-reticulate-advice)
+    (advice-remove #'org-babel-execute:python #'ob-reticulate-advice)))
 
 (provide 'ob-reticulate)
 

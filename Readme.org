@@ -5,10 +5,12 @@
 * Installation
 
 First ensure you have the latest Org release (9.4). Add
-=ob-reticulate.el= to your =load-path= and require it:
+=ob-reticulate.el= to your =load-path=, require it, and then able it
+by calling =ob-reticulate-mode=:
 
 #+begin_src emacs-lisp
   (require 'ob-reticulate)
+  (ob-reticulate-mode)
 #+end_src
 
 * Usage
