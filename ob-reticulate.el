@@ -1,7 +1,7 @@
 ;;; ob-reticulate.el --- Babel Functions for reticulate -*- lexical-binding: t; -*-
 
 ;; Author: Jack Kamm
-;; Keywords: literate programming, reproducible research, R, statistics, languages, outlines, processes
+;; Keywords: literate programming, reproducible research, R, Python, statistics, languages, outlines, processes
 ;; Package-Requires: ((org "9.4") (emacs "24.4"))
 ;; Homepage: https://github.com/jackkamm/ob-reticulate
 ;; Version: 1.0.0
@@ -24,7 +24,8 @@
 
 ;;; Commentary:
 
-;; Org-Babel support for the R package reticulate.
+;; Org-Babel support for the R package reticulate, which enables use
+;; of Python within R.
 
 ;;; Code:
 
