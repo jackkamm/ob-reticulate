@@ -53,14 +53,15 @@
 	     (result-type (cdr (assq :result-type params))))
         (with-temp-file tmp-src-file (insert body))
         (org-babel-execute:R
-         (format (concat "reticulate::py_run_string(\"%s\")"
-		         (when (equal result-type 'value) "
+         (concat (format
+                  "reticulate::py_run_string(\"%s\")"
+                  (org-babel-python-format-session-value
+                   tmp-src-file
+                   (org-babel-process-file-name
+                    (org-babel-temp-file "reticulate-dummy-") 'noquote)
+                   nil))
+		 (when (equal result-type 'value) "
 reticulate::py$`__org_babel_python_final`"))
-                 (org-babel-python-format-session-value
-                  tmp-src-file
-                  (org-babel-process-file-name
-                   (org-babel-temp-file "reticulate-dummy-") 'noquote)
-                  nil))
          params)))))
 
 (provide 'ob-reticulate)
