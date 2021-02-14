@@ -33,6 +33,9 @@
 (require 'ob-python)
 
 (defun ob-reticulate-advice (orig-fun body params)
+  "Advice to use ob-python blocks with R reticulate.
+ORIG-FUN must be `org-babel-execute:python'.  BODY and PARAMS are
+the arguments of that function."
   (let* ((session (cdr (assq :session params)))
          (session-mode
           (and session
