@@ -2,11 +2,12 @@
 
 [[https://orgmode.org/worg/org-contrib/babel/][org-babel]] support for the [[https://rstudio.github.io/reticulate/][reticulate]] interface between R and Python.
 
-* Installation
+* Getting started
 
-First ensure you have the latest Org release (9.4). Add
-=ob-reticulate.el= to your =load-path=, require it, and then able it
-by calling =ob-reticulate-mode=:
+=ob-reticulate= is available from MELPA. It requires Org 9.4 or higher.
+
+To get started, load =ob-reticulate=, then enable it by activating
+=ob-reticulate-mode=:
 
 #+begin_src emacs-lisp
   (require 'ob-reticulate)
