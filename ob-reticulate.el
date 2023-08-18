@@ -43,12 +43,28 @@ the arguments of that function."
              (let ((session-buffer (get-buffer session)))
                (and session-buffer
                     (with-current-buffer session-buffer
-                      major-mode))))))
+                      major-mode)))))
+         (graphics-file (and (member "graphics" (assq :result-params params))
+			     (org-babel-graphical-output-file params)))
+         ;; XXX remove graphics from params
+         (params (if graphics-file params params)))
     (if (not (eq session-mode 'inferior-ess-r-mode))
         (funcall orig-fun body params)
       (let* ((tmp-src-file (org-babel-temp-file "reticulate-"))
 	     (result-type (cdr (assq :result-type params))))
-        (with-temp-file tmp-src-file (insert body))
+        (with-temp-file tmp-src-file
+          (insert (if graphics-file
+                      (format
+                       "\
+import pyplot as __org_babel_reticulate_pyplot
+with __org_babel_reticulate_pyplot.rc_context(%s):
+%s
+    __org_babel_reticulate_pyplot.savefig(%s)"
+                       "{}" ;XXX width, height
+                       ;; HACK: calling private ob-python function
+                       (org-babel-python--shift-right body 4)
+                       graphics-file)
+                    body)))
         (org-babel-execute:R
          (concat (format
                   "reticulate::py_run_string(\"%s\")"
