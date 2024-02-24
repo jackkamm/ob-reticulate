@@ -50,15 +50,25 @@ the arguments of that function."
 	     (result-type (cdr (assq :result-type params))))
         (with-temp-file tmp-src-file (insert body))
         (org-babel-execute:R
+         ;; adapted from `org-babel-python-format-session-value'
          (concat (format
-                  "reticulate::py_run_string(\"%s\")"
-                  (org-babel-python-format-session-value
-                   tmp-src-file
-                   (org-babel-process-file-name
-                    (org-babel-temp-file "reticulate-dummy-") 'noquote)
-                   nil))
+                  "reticulate::py_run_string(\"
+import ast
+with open('%s') as __OB_RETICULATE_TMPFILE:
+    __OB_RETICULATE_AST = ast.parse(__OB_RETICULATE_TMPFILE.read())
+__OB_RETICULATE_FINAL = __OB_RETICULATE_AST.body[-1]
+if isinstance(__OB_RETICULATE_FINAL, ast.Expr):
+    __OB_RETICULATE_AST.body = __OB_RETICULATE_AST.body[:-1]
+    exec(compile(__OB_RETICULATE_AST, '<string>', 'exec'))
+    __OB_RETICULATE_FINAL = eval(compile(ast.Expression(
+        __OB_RETICULATE_FINAL.value), '<string>', 'eval'))
+else:
+    exec(compile(__OB_RETICULATE_AST, '<string>', 'exec'))
+    __OB_RETICULATE_FINAL = None
+\")"
+                  tmp-src-file)
 		 (when (equal result-type 'value) "
-reticulate::py$`__org_babel_python_final`"))
+reticulate::py$`__OB_RETICULATE_FINAL`"))
          params)))))
 
 ;;;###autoload
