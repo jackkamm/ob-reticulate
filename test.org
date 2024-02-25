@@ -1,0 +1,36 @@
+* A few test blocks to check ob-reticulate works
+
+#+begin_src R :session *R:ob-reticulate* :results output
+  library(reticulate)
+  use_python(Sys.which("python"))
+#+end_src
+
+#+RESULTS:
+
+#+begin_src python :session *R:ob-reticulate* :colnames yes
+  import pandas as pd
+  df = pd.DataFrame({"X":[1,2,3], "Y":["a","b","c"]})
+  df
+#+end_src
+
+#+RESULTS:
+| X | Y |
+|---+---|
+| 1 | a |
+| 2 | b |
+| 3 | c |
+
+#+begin_src R :session *R:ob-reticulate* :results output
+  summary(py$df)
+#+end_src
+
+#+RESULTS:
+:        X            Y            
+:  Min.   :1.0   Length:3          
+:  1st Qu.:1.5   Class :character  
+:  Median :2.0   Mode  :character  
+:  Mean   :2.0                     
+:  3rd Qu.:2.5                     
+:  Max.   :3.0
+
+* TODO Convert this file into proper unit tests
